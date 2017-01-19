@@ -22,7 +22,7 @@ import java.util.Scanner;
 public final class NetworkUtils {
 
 
-    public static  String getResponsefromHttp () throws IOException,JSONException{
+    public static  String getResponsefromHttp (QuotationInput  quoteinput) throws IOException,JSONException{
         URL url= new URL("http://192.168.2.11:3000/api/vehicle_search");
 
         DataOutputStream printout;
@@ -39,11 +39,11 @@ public final class NetworkUtils {
         //form json obejct to send
         JSONObject quote=new JSONObject();
         JSONObject jsonParam = new JSONObject();
-        jsonParam.put("from_city", "PUNE");
-        jsonParam.put("to_city", "MUMBAI");
-        jsonParam.put("start_date", "15/01/2017");
-        jsonParam.put("end_date", "20/01/2017");
-        jsonParam.put("max_people", "7");
+        jsonParam.put("from_city",quoteinput.getFrom_city());
+        jsonParam.put("to_city", quoteinput.getTo_city());
+        jsonParam.put("start_date",quoteinput.getStart_date());
+        jsonParam.put("end_date", quoteinput.getEnd_date());
+        jsonParam.put("max_people",quoteinput.getMax_people());
         quote.put("quotation",jsonParam);
 
         //send post output

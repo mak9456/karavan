@@ -16,6 +16,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+
 import static com.example.mak9456.karavan.QuoteRes.msearchdisplay;
 import static java.sql.Types.NULL;
 
@@ -26,20 +28,40 @@ public class QuoteRes extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quote_res);
         msearchdisplay=(TextView) findViewById(R.id.disp_quote);
-        launchqueryres  launch= new launchqueryres();
+
+        launchqueryres  launch= new launchqueryres(getData());
         launch.execute();
       }
 
-
+    protected  QuotationInput getData(){
+        QuotationInput quotationInput=new QuotationInput();
+        Bundle extras = getIntent().getExtras();
+       // Log.d("In getdata",quotationInput.setFrom_city(extras.getString("from_city")));
+        Log.d("In getdata bundle",extras.getString("to_city"));
+        if (extras != null) {
+            quotationInput.setFrom_city(extras.getString("from_city")); ;
+            quotationInput.setTo_city(extras.getString("to_city"));
+            quotationInput.setStart_date(extras.getString("start_date"));
+            quotationInput.setEnd_date(extras.getString("end_date"));
+            quotationInput.setMax_people(extras.getString("max_people"));
+        }
+        return quotationInput;
+    }
 
 }
 
-     class launchqueryres extends AsyncTask<Void,Void,QuoteResponse[]> {
 
-        protected  QuoteResponse[] doInBackground(Void ...params){
+  class launchqueryres extends AsyncTask<Void ,Void,QuoteResponse[]> {
+            private QuotationInput quotein;
+            launchqueryres(QuotationInput set_quotein)
+            {
+                this.quotein=set_quotein;
+
+            }
+        protected  QuoteResponse[] doInBackground(Void ... params){
 
             try {
-                String jsonQuotationResponse = NetworkUtils.getResponsefromHttp();
+                String jsonQuotationResponse = NetworkUtils.getResponsefromHttp(quotein);
 
                 QuoteResponse[] Jsondisp=OpenQuoteJsonUtils.getQuotesFromJson( jsonQuotationResponse);
 
@@ -58,8 +80,8 @@ public class QuoteRes extends AppCompatActivity {
 
 
                 for(int i=0;i<4;i++){
-                   // quoteResponseDisp[i]=new QuoteResponse();
-                    msearchdisplay.append(quoteResponseDisp[i].vendor.getVendor_name() +" "+quoteResponseDisp[i].vehicle.getVehicle_type()+quoteResponseDisp[i].getPrice_per_day()+"\n\n\n");}
+
+                    msearchdisplay.append(quoteResponseDisp[i].vendor.getVendor_name() +" "+quoteResponseDisp[i].vendor.getLogo()+"\n\n\n");}
 
 
 
